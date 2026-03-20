@@ -1,0 +1,87 @@
+{
+  "id": "openclaw-tablestore",
+  "skills": ["./src/skills"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "epub360": {
+        "type": "object",
+        "description": "Epub360 credentials and service configuration",
+        "additionalProperties": false,
+        "required": ["clientId", "clientSecret"],
+        "properties": {
+          "baseUrl": {
+            "type": "string",
+            "default": "https://www.epub360.com",
+            "description": "Datastorage API base URL"
+          },
+          "clientId": {
+            "type": "string",
+            "description": "OAuth client ID"
+          },
+          "clientSecret": {
+            "type": "string",
+            "description": "OAuth client secret"
+          },
+          "services": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "tablestore": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "apiVersion": {
+                    "type": "string",
+                    "enum": ["v2", "v3"],
+                    "default": "v2"
+                  }
+                }
+              },
+              "h5store": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "apiVersion": {
+                    "type": "string",
+                    "enum": ["v2", "v3"],
+                    "default": "v3"
+                  }
+                }
+              }
+            }
+          },
+          "accounts": {
+            "type": "object",
+            "additionalProperties": true,
+            "patternProperties": {
+              "^[a-zA-Z0-9_-]+$": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "baseUrl": { "type": "string" },
+                  "clientId": { "type": "string" },
+                  "clientSecret": { "type": "string" },
+                  "services": {
+                    "type": "object",
+                    "properties": {
+                      "tablestore": {
+                        "type": "object",
+                        "properties": { "apiVersion": { "type": "string" } }
+                      },
+                      "h5store": {
+                        "type": "object",
+                        "properties": { "apiVersion": { "type": "string" } }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

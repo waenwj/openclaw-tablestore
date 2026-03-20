@@ -1,0 +1,42 @@
+{
+  "name": "@epub360/openclaw-tablestore",
+  "version": "0.1.0",
+  "description": "OpenClaw Tablestore plugin — table management and record CRUD for Datastorage",
+  "type": "module",
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/ index.ts",
+    "lint:fix": "eslint src/ index.ts --fix",
+    "format": "prettier --write src/**/*.ts",
+    "format:check": "prettier --check src/**/*.ts"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.34.48",
+    "axios": "^1.7.9",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "@vitest/coverage-v8": "^4.1.0",
+    "eslint": "^9.39.3",
+    "eslint-plugin-import": "^2.32.0",
+    "openclaw": "2026.2.26",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
