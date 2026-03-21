@@ -11,7 +11,7 @@
 import { Type } from '@sinclair/typebox';
 import type { OpenClawPluginApi } from 'openclaw/plugin-sdk';
 import { json, createToolContext, registerTool } from '../helpers';
-import type { TableListItem, TableListResponse } from '../../core/types';
+import type { TableListResponse } from '../../core/types';
 
 // ---------------------------------------------------------------------------
 // Schema
@@ -22,8 +22,8 @@ const ListTablesParams = Type.Object({});
 const ListTablesResult = Type.Object({
   tables: Type.Array(
     Type.Object({
-      uuid: Type.String({ description: 'Table UUID (slug)' }),
-      id: Type.Optional(Type.String({ description: 'Table numeric ID' })),
+      uuid: Type.String({ description: 'Table UUID (唯一标识)' }),
+      table_id: Type.String({ description: 'Table numeric ID' }),
       title: Type.String({ description: 'Table title' }),
       description: Type.Optional(Type.String({ description: 'Table description' })),
       fields: Type.Optional(
@@ -39,6 +39,9 @@ const ListTablesResult = Type.Object({
     { description: 'List of accessible tables' },
   ),
   total: Type.Optional(Type.Number({ description: 'Total count' })),
+  page: Type.Optional(Type.Number()),
+  size: Type.Optional(Type.Number()),
+  numpages: Type.Optional(Type.Number()),
 });
 
 // ---------------------------------------------------------------------------
@@ -69,18 +72,22 @@ export function registerListTablesTool(api: OpenClawPluginApi) {
             '/api/tables/',
           );
 
-          const tables = resp.results ?? [];
-          log.info(`list_tables: returned ${tables.length} tables`);
+          const tables = resp.data?.results ?? [];
+          const meta = resp.data;
+          log.info(`list_tables: returned ${tables.length} tables (total ${meta?.sum ?? 'unknown'})`);
 
           return json({
-            tables: tables.map((t: TableListItem) => ({
-              uuid: t.uuid,
-              id: t.id,
+            tables: tables.map((t) => ({
+              uuid: t.id,          // API 的 id 字段即为 UUID
+              table_id: t.table_id,
               title: t.title,
               description: t.description,
               fields: t.fields,
             })),
-            total: resp.count ?? tables.length,
+            total: meta?.sum ?? tables.length,
+            page: meta?.page,
+            size: meta?.size,
+            numpages: meta?.numpages,
           });
         } catch (err) {
           log.error(`list_tables: failed — ${err}`);

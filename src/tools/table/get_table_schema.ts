@@ -6,12 +6,15 @@
  *
  * Gets detailed schema for a table (fields, types, options).
  * Calls: OPTIONS /v2/api/tables/{uuid}/
+ *
+ * Note: The OPTIONS endpoint may return empty fields for some tables.
+ * If fields are empty, falls back to the list endpoint to get embedded fields.
  */
 
 import { Type } from '@sinclair/typebox';
 import type { OpenClawPluginApi } from 'openclaw/plugin-sdk';
 import { json, createToolContext, registerTool } from '../helpers';
-import type { TableField } from '../../core/types';
+import type { TableField, TableListItem, TableListResponse } from '../../core/types';
 
 // ---------------------------------------------------------------------------
 // Schema
@@ -33,11 +36,16 @@ const FieldSchema = Type.Object({
   can_sort: Type.Optional(Type.Boolean()),
   can_filter: Type.Optional(Type.Boolean()),
   can_search: Type.Optional(Type.Boolean()),
+  can_query: Type.Optional(Type.Boolean()),
+  can_calc: Type.Optional(Type.Boolean()),
+  anyone_can_edit: Type.Optional(Type.Boolean()),
+  extra_info: Type.Optional(Type.Record(Type.String(), Type.Any())),
+  defaultValue: Type.Optional(Type.String()),
 });
 
 const GetTableSchemaResult = Type.Object({
   uuid: Type.String(),
-  id: Type.Optional(Type.String()),
+  table_id: Type.Optional(Type.String()),
   title: Type.String(),
   description: Type.Optional(Type.String()),
   fields: Type.Array(FieldSchema),
@@ -69,28 +77,59 @@ export function registerGetTableSchemaTool(api: OpenClawPluginApi) {
 
           log.info(`get_table_schema: fetching schema for ${table_uuid}`);
 
+          // Try OPTIONS endpoint first
           const resp = await epubClient().invoke<{
+            msg?: string;
+            code?: number;
+            data?: {
+              id?: string;
+              table_id?: string;
+              title?: string;
+              description?: string;
+              fields?: TableField[];
+              config?: unknown;
+            };
             id?: string;
-            uuid?: string;
+            table_id?: string;
             title?: string;
             description?: string;
             fields?: TableField[];
             config?: unknown;
           }>('tablestore', 'OPTIONS', `/api/tables/${table_uuid}/`);
 
-          if (!resp) {
-            return json({ error: 'Table not found or no access' });
+          // Extract fields from either top-level or nested data
+          const raw = resp as Record<string, unknown>;
+          const dataBlock = (raw.data ?? raw) as Record<string, unknown> | undefined;
+          let fields = (dataBlock?.fields ?? raw.fields ?? []) as TableField[];
+          const title = (dataBlock?.title ?? raw.title ?? '') as string;
+          const tableId = (dataBlock?.table_id ?? raw.table_id ?? '') as string;
+
+          // Fallback: if OPTIONS returns no fields, fetch from list endpoint
+          if (fields.length === 0) {
+            log.info(`get_table_schema: OPTIONS returned 0 fields, falling back to list endpoint`);
+            const listResp = await epubClient().invoke<TableListResponse>(
+              'tablestore',
+              'GET',
+              '/api/tables/',
+            );
+            const matched = listResp.data?.results?.find(
+              (t: TableListItem) => t.id === table_uuid,
+            );
+            if (matched) {
+              fields = matched.fields;
+              log.info(`get_table_schema: found ${fields.length} fields from list fallback`);
+            }
           }
 
-          log.info(`get_table_schema: returned ${resp.fields?.length ?? 0} fields`);
+          log.info(`get_table_schema: returned ${fields.length} fields`);
 
           return json({
-            uuid: resp.uuid ?? resp.id ?? table_uuid,
-            id: resp.id,
-            title: resp.title ?? '',
-            description: resp.description,
-            fields: resp.fields ?? [],
-            config: resp.config,
+            uuid: table_uuid,
+            table_id: tableId,
+            title,
+            description: (dataBlock?.description ?? raw.description ?? '') as string,
+            fields,
+            config: dataBlock?.config ?? raw.config,
           });
         } catch (err) {
           log.error(`get_table_schema: failed — ${err}`);

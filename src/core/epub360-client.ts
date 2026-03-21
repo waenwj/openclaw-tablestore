@@ -67,6 +67,13 @@ export class Epub360Client {
   }
 
   /**
+   * Get a valid access token (exposes TokenManager.getToken for verification scripts).
+   */
+  async getToken(): Promise<string> {
+    return this.tokenManager.getToken();
+  }
+
+  /**
    * Invoke an API call on behalf of the given account.
    *
    * @param service   - 'tablestore' or 'h5store'

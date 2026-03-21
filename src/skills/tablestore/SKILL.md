@@ -3,11 +3,12 @@ name: epub360-tablestore
 description: |
   Epub360 Tablestore 数据表管理工具。提供数据表的增删改查和行级数据 CRUD。
 
-  **当以下情况时使用此 Skill：**
-  (1) 需要查看、创建、修改、删除数据表
-  (2) 需要在数据表中新增、查询、修改、删除记录（行数据）
-  (3) 用户提到"数据表"、"Tablestore"、"表"、"记录"、"行"
----
+  **当以下情况时使用此 Skill（管理员操作）：**
+  (1) 需要查看、创建、修改、删除数据表（表结构管理）
+  (2) 需要以管理员身份对记录进行增删改查
+  (3) 用户提到"数据表"、"Tablestore"、"表"的管理
+
+  **匿名用户操作（HTML 页面）** → 使用 `epub360-develop-tablestore-html` Skill
 
 # Epub360 Tablestore SKILL
 
@@ -32,16 +33,14 @@ description: |
 
 ## 📋 快速索引：意图 → 工具 → 必填参数
 
-| 用户意图 | 工具 | action | 必填参数 |
-|---------|------|--------|---------|
-| 列出所有表 | epub360_tablestore_list_tables | — | 无 |
-| 获取表结构详情 | epub360_tablestore_get_table_schema | get | table_uuid |
-| 创建新表 | epub360_tablestore_create_table | create | table（name + fields） |
-| 更新表（元信息/字段） | epub360_tablestore_update_table | update_meta / add_field / update_field / delete_field | table_uuid |
-| 列出/搜索记录 | epub360_tablestore_list_records | list | table_uuid |
-| 批量创建记录 | epub360_tablestore_create_records | batch_create | table_uuid, records |
-| 批量更新记录 | epub360_tablestore_update_records | batch_update | table_uuid, records |
-| 批量删除记录 | epub360_tablestore_delete_records | batch_delete | table_uuid, record_ids |
+| 用户意图 | 工具 | 必填参数 |
+|---------|------|---------|
+| 列出所有表 | epub360_tablestore_list_tables | 无 |
+| 获取表结构详情 | epub360_tablestore_get_table_schema | table_uuid |
+| 创建新表 | epub360_tablestore_create_table | table（name + fields） |
+| 更新表（元信息/字段） | epub360_tablestore_update_table | table_uuid |
+
+**匿名用户操作（HTML 页面）** → 参考 `epub360-develop-tablestore-html` Skill
 
 ---
 
@@ -98,41 +97,6 @@ description: |
 ```
 
 **返回**：包含每个字段的 `cid`、`label`、`field_type`
-
-### 场景 3: 在表中创建一条记录
-
-```json
-{
-  "action": "create",
-  "table_uuid": "abc123",
-  "fields": {
-    "s1": "张三",
-    "i2": 28,
-    "d3": "2026-03-20"
-  }
-}
-```
-
-**字段值格式**：键为 cid（如 `s1`），值根据字段类型而定（见上表）。
-
-### 场景 4: 批量导入记录
-
-```json
-{
-  "action": "batch_create",
-  "table_uuid": "abc123",
-  "records": [
-    {
-      "fields": { "s1": "张三", "i2": 28 }
-    },
-    {
-      "fields": { "s1": "李四", "i2": 35 }
-    }
-  ]
-}
-```
-
-**限制**：单次最多 500 条记录。
 
 ---
 

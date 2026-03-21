@@ -65,9 +65,9 @@ describe('TokenManager', () => {
 
     expect(mockedPost).toHaveBeenCalledWith(
       `${BASE_URL}/v3/api/auth/oauth/token/`,
-      expect.stringContaining('client_id=my_client'),
+      { client_id: 'my_client', client_secret: 'my_secret', grant_type: 'client_credentials' },
       expect.objectContaining({
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: { 'Content-Type': 'application/json' },
         timeout: 10_000,
       }),
     );

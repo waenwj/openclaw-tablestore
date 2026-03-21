@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025 AI大会活动报名</title>
+  <style>
+    body { margin: 0; padding: 0; background: #f5f5f5; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!--
+    epub360-develop-tablestore-html SKILL 示例页面
+    表结构（table_id: 395b24abaf6b4901860924ece4ad508b）:
+    - s1: 省份 (string, required)
+    - s2: 城市 (string, required)
+    - s3: 单位 (string, required)
+    - s4: 职务 (string, optional)
+    - r1: 第2天议题 (radio, required, options: ["AI助力企业数字化营销","AI与生产制造计划排程"])
+    - r2: 第3天议题 (radio, required, options: ["AI Agent落地最佳实践","AI的持续发展路径探讨"])
+    - s5: 开票抬头 (string, optional)
+    - s6: 税号 (string, optional)
+  -->
+
+  <!-- SDK 必须先于 widget 加载 -->
+  <script src="https://21epub-assets.zhizhucms.com/tablestore/vibe-tablestore-sdk.umd.js"></script>
+  <script src="./ai-conf-registration-widget.js"></script>
+  <script>
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+    function init() {
+      window.createAiConfRegistrationWidget(document.getElementById('app'));
+    }
+  </script>
+</body>
+</html>
