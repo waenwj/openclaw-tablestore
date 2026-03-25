@@ -96,13 +96,13 @@ export class TokenManager {
     try {
       const resp = await axios.post(
         `${BASE_URL}/v3/api/auth/oauth/token/`,
-        new URLSearchParams({
+        {
           client_id: this.clientId,
           client_secret: this.clientSecret,
           grant_type: 'client_credentials',
-        }).toString(),
+        },
         {
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          headers: { 'Content-Type': 'application/json' },
           timeout: 10_000,
         },
       );

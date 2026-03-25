@@ -12,6 +12,7 @@
     "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
+    "verify": "npx tsx verify.ts",
     "lint": "eslint src/ index.ts",
     "lint:fix": "eslint src/ index.ts --fix",
     "format": "prettier --write src/**/*.ts",
@@ -31,6 +32,7 @@
     "eslint-plugin-import": "^2.32.0",
     "openclaw": "2026.2.26",
     "prettier": "^3.8.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vitest": "^4.1.0"
   },

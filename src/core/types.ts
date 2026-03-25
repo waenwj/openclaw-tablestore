@@ -52,25 +52,70 @@ export interface Epub360ErrorResponse {
   msg: string;
 }
 
-export interface TableListItem {
-  id: string;
-  uuid: string;
-  title: string;
-  description?: string;
-  fields?: TableField[];
-}
-
 export interface TableField {
   cid: string;
   label: string;
   field_type: number;
   is_required?: boolean;
+  is_unique?: boolean;
+  is_random?: boolean;
+  max?: number | null;
+  min?: number | null;
+  config?: unknown;
+  defaultValue?: string;
+  can_sort?: boolean;
+  can_filter?: boolean;
+  can_search?: boolean;
+  can_query?: boolean;
+  can_calc?: boolean;
+  anyone_can_edit?: boolean;
   options?: string[];
+  extra_info?: Record<string, unknown>;
+  widget_type?: string;
+}
+
+export interface TableListItem {
+  id: string;           // UUID (唯一标识)
+  table_id: string;    // 数字 ID
+  app_id: string | null;
+  package_status: number;
+  startTime: string | null;
+  endTime: string | null;
+  active_auto_increment: boolean;
+  sms_check: boolean;
+  show_contact_info: boolean;
+  show_weixin_info: boolean;
+  captcha_required: boolean;
+  sharing_password: string | null;
+  sharing_status: number;
+  title: string;
+  description: string;
+  created: string;
+  modified: string;
+  rule: number;
+  application_id: string | null;
+  source_id: string | null;
+  sort_on: string;
+  sort_order: string;
+  all_total_limit: number;
+  config: unknown;
+  qualification_subscribe: boolean;
+  fields: TableField[];
+  reference_relations: string[];
+  rule_type: number;
+  rule_num: number;
+}
+
+export interface TableListData {
+  sum: number;
+  page: number;
+  size: number;
+  numpages: number;
+  results: TableListItem[];
 }
 
 export interface TableListResponse {
-  count?: number;
-  next?: string;
-  previous?: string;
-  results?: TableListItem[];
+  msg: string;
+  code: number;
+  data: TableListData;
 }

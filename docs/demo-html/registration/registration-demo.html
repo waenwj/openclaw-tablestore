@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2025 AI大会活动报名</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+    #app {
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <!-- SDK must be loaded before widget -->
+  <script src="../../sdk/vibe-tablestore-sdk.umd.js"></script>
+  <!-- Widget bundle -->
+  <script src="./registration-widget.js"></script>
+  <script>
+    // Initialize widget when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initWidget);
+    } else {
+      initWidget();
+    }
+    
+    function initWidget() {
+      if (typeof window.createRegistrationWidget === 'function') {
+        window.createRegistrationWidget(document.getElementById('app'));
+      } else {
+        document.getElementById('app').innerHTML = '<div style="padding: 40px; text-align: center;">组件加载失败，请刷新重试</div>';
+      }
+    }
+  </script>
+</body>
+</html>

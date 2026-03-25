@@ -97,12 +97,27 @@
 
 ---
 
-## Milestone 3: Tablestore 记录 CRUD（TODO 待确认）
+## Milestone 3: Tablestore HTML 开发 Skill（done ✅）
 
-- [ ] `epub360_tablestore_list_records` — 列出/搜索记录
-- [ ] `epub360_tablestore_create_records` — 批量创建记录
-- [ ] `epub360_tablestore_update_records` — 批量更新记录
-- [ ] `epub360_tablestore_delete_records` — 批量删除记录
+- [x] `epub360-develop-tablestore-html` SKILL — 教 OpenClaw 生成含 JS SDK 的 HTML 页面
+- **File:** `src/skills/develop-tablestore-html/SKILL.md`
+- **Details:**
+  - SDK 加载与初始化（`createTableStoreClient`、`table()`）
+  - CRUD API（list / getById / create / update / remove）
+  - 字段类型与值格式（cid 前缀说明）
+  - 工程模式：壳页面 + Widget 分离结构
+  - 错误处理（`TableStoreSDKError` 结构）
+  - 典型场景示例（表单、列表、编辑）
+  - 与管理员工具的区分
+
+---
+
+## Milestone 4: Tablestore 记录 CRUD 工具（TODO 暂缓）
+
+- [ ] `epub360_tablestore_list_records` — 管理员列出/搜索记录
+- [ ] `epub360_tablestore_create_records` — 管理员批量创建记录
+- [ ] `epub360_tablestore_update_records` — 管理员批量更新记录
+- [ ] `epub360_tablestore_delete_records` — 管理员批量删除记录
 
 ---
 
